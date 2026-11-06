@@ -1,6 +1,6 @@
 import { Facebook, Instagram, Mail, Phone } from "lucide-react";
-import {HashLink} from 'react-router-hash-link';
-
+import { HashLink } from 'react-router-hash-link';
+import regulamentoPDF from '../assets/Regulamento_Copa_Circuito_Paulista_Velocross_2026_Profissional_Tamura NOVO.pdf';
 const Footer = () => {
   return (
     <footer className="bg-[#050505] text-white border-t border-[#D80000] pt-16 pb-8 mt-auto">
@@ -25,7 +25,11 @@ const Footer = () => {
             <h3 className="text-lg font-bold uppercase mb-4 border-l-4 border-[#D80000] pl-3">Acesso Rápido</h3>
             <ul className="space-y-2 text-gray-400 text-sm">
               <li className="hover:text-white cursor-pointer transition"><HashLink smooth to="/#events-list">Calendário 2026</HashLink></li>
-              <li className="hover:text-white cursor-pointer transition"><a href="https://www.tamura.esp.br/midias/info/Regulamento%20da%20Copa%20CIRCUITO%20PAULISTA%20DE%20VELOCROSS%202025.pdf">Regulamento Oficial</a></li>
+              <li className="hover:text-white cursor-pointer transition">
+                <a href={regulamentoPDF} target="_blank" rel="noopener noreferrer">
+                  Regulamento Oficial
+                </a>
+              </li>
             </ul>
           </div>
 

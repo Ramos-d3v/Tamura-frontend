@@ -12,7 +12,7 @@ export default defineConfig({
       // As configurações do manifesto são puxadas automaticamente do arquivo public/manifest.json
       // Mas precisamos garantir que o service worker seja gerado corretamente
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,pdf}'],
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024 // 6 MB
       },
       devOptions: {

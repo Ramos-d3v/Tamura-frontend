@@ -1,7 +1,7 @@
 import { Facebook, Instagram, Mail, Phone } from "lucide-react";
 import { HashLink } from 'react-router-hash-link';
 
-const regulamentoPDF = '/Regulamento_Copa_Circuito_Paulista_Velocross_2026_Profissional_Tamura%20NOVO.pdf';
+const regulamentoPDF = '/regulamento-tamura-2026.pdf';
 
 const Footer = () => {
   return (

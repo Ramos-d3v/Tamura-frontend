@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Ficha de Inscrição</title>
+<style>
+@page{size:A4;margin:10mm}
+*{box-sizing:border-box}
+body{margin:0;background:#e3e3e3;font-family:Arial,Helvetica,sans-serif;color:#000;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.bar{position:sticky;top:0;z-index:5;background:#111;color:#fff;padding:10px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.bar button{font:inherit;font-weight:700;background:#ffd400;color:#000;border:0;border-radius:8px;padding:9px 18px;cursor:pointer}
+.sheet{width:210mm;max-width:100%;margin:14px auto;background:#fff;padding:12mm 12mm 10mm}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:4px}
+h1{margin:0;font-size:26px;text-decoration:underline;letter-spacing:.01em}
+.chip{display:flex;align-items:flex-end;gap:6px;font-weight:700;font-size:18px}
+.chip i{display:inline-block;width:110px;border-bottom:2px solid #000;height:20px}
+.evt{font-size:12px;margin:0 0 16px;color:#222}
+.r{display:flex;gap:18px;margin-bottom:13px}
+.f{display:flex;align-items:flex-end;gap:6px;flex:1;min-width:0}
+.f.w2{flex:2}.f.w3{flex:3}
+.f label{font-weight:700;font-size:13px;white-space:nowrap}
+.v{flex:1;min-width:0;border-bottom:1px solid #000;min-height:19px;font-weight:700;font-size:14px;padding:0 4px;overflow-wrap:anywhere}
+.box{border:2px solid #000;padding:14px 16px;margin:16px 0 14px}
+.purple{color:#7a1f4d;font-weight:700}
+.tot{font-size:14px;margin-bottom:12px}
+.tot b{display:inline-block;min-width:34px;text-align:center;border-bottom:2px solid #000;color:#000;font-size:16px}
+.moto{display:flex;justify-content:flex-end;align-items:flex-end;gap:8px;font-size:14px;margin-bottom:12px}
+.moto .v{flex:none;width:170px;text-align:center}.moto .v.n{width:60px}
+.cats{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.cats>b{font-size:14px}
+.cats span{background:#efefef;font-weight:700;font-size:12px;text-transform:uppercase;padding:6px 10px;border-radius:4px}
+.ins{border:1px solid #000;padding:10px 14px;margin-bottom:14px}
+.ins h3{margin:0 0 8px;font-size:13px;text-transform:uppercase}
+.ins .r{margin-bottom:8px}
+.termo{border:1px solid #000;background:#f8f9fb;padding:12px 16px;margin-bottom:14px;font-size:10.5px;line-height:1.4;text-align:justify}
+.termo h2{font-size:12.5px;text-decoration:underline;margin:0 0 8px}
+.termo p{margin:0}
+.imp{font-size:11px;line-height:1.4;margin-bottom:26px}
+.imp .purple{text-decoration:underline;display:block;margin-bottom:5px;font-size:12px}
+.imp p{margin:0 0 6px}
+.ass{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-top:34px;font-size:14px;font-weight:700}
+.ass .l{flex:1;text-align:center;border-top:1px solid #000;padding-top:5px;font-size:12px;max-width:340px}
+.erro{max-width:520px;margin:40px auto;background:#fff;padding:24px;border-radius:10px;text-align:center}
+[hidden]{display:none!important}
+@media(max-width:700px){.sheet{padding:14px}.r{flex-wrap:wrap;gap:10px}.f{flex:1 1 100%}.top{flex-wrap:wrap}}
+@media print{body{background:#fff}.bar{display:none}.sheet{margin:0;width:auto;padding:0}}
+</style>
+</head>
+<body>
+<div class="bar" id="bar"><span>Ficha de inscrição pronta para imprimir</span><button type="button" onclick="window.print()">Imprimir ficha</button></div>
+
+<div class="erro" id="erro" hidden>Link da ficha inválido ou incompleto. Peça ao piloto para reenviar a inscrição pelo formulário.</div>
+
+<div class="sheet" id="sheet">
+  <div class="top"><h1>FICHA DE INSCRIÇÃO</h1><div class="chip">CHIP Nº <i></i></div></div>
+  <p class="evt">12ª Etapa Circuito Paulista de Velocross – Grande Final 2026 – Jacutinga</p>
+
+  <div class="r">
+    <div class="f w2"><label>Equipe:</label><div class="v" id="eq"></div></div>
+    <div class="f"><label>Data de Nascimento:</label><div class="v" id="nasc"></div></div>
+    <div class="f"><label>Apelido:</label><div class="v" id="ap"></div></div>
+  </div>
+  <div class="r"><div class="f"><label>Nome completo</label><div class="v" id="nome"></div></div></div>
+  <div class="r">
+    <div class="f"><label>RG:</label><div class="v" id="rg"></div></div>
+    <div class="f"><label>CPF:</label><div class="v" id="cpf"></div></div>
+    <div class="f"><label>Convênio Médico:</label><div class="v" id="conv"></div></div>
+  </div>
+  <div class="r"><div class="f"><label>Endereço:</label><div class="v" id="end"></div></div></div>
+  <div class="r">
+    <div class="f"><label>Tel.:</label><div class="v" id="tel"></div></div>
+    <div class="f w2"><label>Importante Tel. de acompanhantes em caso de urgência</label><div class="v" id="urg"></div></div>
+  </div>
+
+  <div class="box">
+    <div class="tot purple">Total de categorias irá participar ( <b id="total"></b> )</div>
+    <div class="moto"><span class="purple">MOTO</span><div class="v" id="moto"></div><span class="purple">#</span><div class="v n" id="num"></div></div>
+    <div class="cats"><b>Categorias:</b><span id="catsNone" hidden></span></div>
+  </div>
+
+  <div class="ins">
+    <h3>Dados da inscrição</h3>
+    <div class="r">
+      <div class="f"><label>Lote:</label><div class="v" id="lote"></div></div>
+      <div class="f w2"><label>Inscrição:</label><div class="v" id="insc"></div></div>
+      <div class="f"><label>Valor:</label><div class="v" id="valor"></div></div>
+    </div>
+    <div class="r" id="rowResp" hidden>
+      <div class="f w2"><label>Responsável:</label><div class="v" id="rn"></div></div>
+      <div class="f"><label>CPF do responsável:</label><div class="v" id="rc"></div></div>
+    </div>
+    <div class="r" id="rowObs" hidden><div class="f"><label>Obs.:</label><div class="v" id="obs"></div></div></div>
+  </div>
+
+  <div class="termo">
+    <h2>Termo de Responsabilidade</h2>
+    <p>Declaro para os devidos fins, que estou participando deste evento por minha livre e espontânea vontade e estou ciente que o Velocross, trata-se de uma atividade esportiva motorizada e sou conhecedor de todos os riscos envolvidos no motociclismo off Road. Declaro também que me encontro fisicamente, clinicamente apto a participar e não fiz uso de bebida alcoólica ou drogas. Concordo em observar e acatar qualquer decisão oficial dos organizadores do evento relativa a possibilidade de não terminá-lo NO TEMPO HABITUAL, por conta de chuvas, acidentes, etc. Assumo ainda todos os riscos de competir nas CORRIDAS E CAMPEONATOS DE VELOCROSS, isentando a todos os organizadores bem como seus patrocinadores, apoiadores, Prefeitura Municipal, de quaisquer acidentes que eu venha a me envolver, durante as competições. Contatos com outros participantes, efeito do clima, incluindo aqui alto calor e suas consequências condições de trafico e do circuito além de outras consequências que possam ter origem em minha falta de condicionamento físico para participar do mencionado evento. De parte das entidades/pessoas aqui nominadas. Estou ciente que qualquer atendimento médico ocasionado na competição será direcionado a rede pública de atendimento médico, "SUS". Concedo ainda aos organizadores do evento e a seus patrocinadores, a utilizarem fotografias, filmagens ou qualquer outra forma que mostre minha participação NAS CORRIDAS E CAMPEONATOS DE VELOCROSS, bem como utilizar imagens para divulgação, prospecção e outras finalidades da organização.</p>
+  </div>
+
+  <div class="imp">
+    <span class="purple">IMPORTANTE:</span>
+    <p>Não será devolvido os valores pagos referente as inscrições em HIPÓTESE alguma, bem como não será possível transferi-las para etapas futuras. <b class="purple" style="text-decoration:none;display:inline;font-size:inherit">É PROIBIDO</b> a transferência de inscrições do piloto para outro piloto.</p>
+    <p>Caso não seja possível terminar a etapa devido as condições climáticas, condições da pista, quebra de horário, NÃO HAVERÁ compensação ou devolução de valores pagos, as categorias não realizadas terão pontuação dobrada na próxima etapa.</p>
+  </div>
+
+  <div class="ass"><span>São Paulo, ___/___/_____</span><div class="l">ASSINATURA DO PILOTO OU RESPONSÁVEL</div></div>
+</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const txt = (id, v) => { $(id).textContent = v || ''; };
+  try {
+    const h = location.hash.replace(/^#d=/, '');
+    if (!h) throw new Error('vazio');
+    let b = h.replace(/-/g, '+').replace(/_/g, '/');
+    while (b.length % 4) b += '=';
+    const d = JSON.parse(decodeURIComponent(escape(atob(b))));
+    ['eq','nasc','ap','nome','rg','cpf','conv','end','tel','urg','moto','num','lote','insc','valor'].forEach(k => txt(k, d[k]));
+    const cats = Array.isArray(d.cats) ? d.cats : [];
+    txt('total', String(cats.length));
+    const box = document.querySelector('.cats');
+    cats.forEach(c => { const s = document.createElement('span'); s.textContent = c; box.appendChild(s); });
+    if (d.rn || d.rc) { txt('rn', d.rn); txt('rc', d.rc); $('rowResp').hidden = false; }
+    if (d.obs) { txt('obs', d.obs); $('rowObs').hidden = false; }
+    document.title = 'Ficha – ' + (d.nome || 'piloto');
+  } catch (e) {
+    $('sheet').hidden = true; $('bar').hidden = true; $('erro').hidden = false;
+  }
+})();
+</script>
+</body>
+</html>

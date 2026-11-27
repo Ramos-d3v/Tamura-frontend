@@ -74,6 +74,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--yellow)}
 .semcpf{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:1rem;color:var(--muted);cursor:pointer}
 .semcpf input{accent-color:var(--accent);width:18px;height:18px;margin:0}
 input:disabled{opacity:.4;cursor:not-allowed}
+.cepmsg{display:block;margin-top:3px;font-size:.95rem;min-height:1.2em;color:var(--muted)}
 .catbtn{margin-top:6px;font:inherit;font-weight:700;background:transparent;color:var(--yellow);border:2px solid var(--yellow);border-radius:10px;padding:6px 12px;cursor:pointer}
 dialog{padding:0;border:3px solid var(--yellow);border-radius:18px;background:var(--panel);color:var(--text);width:calc(100% - 24px);max-width:640px;max-height:86vh;box-shadow:0 0 30px rgba(255,212,0,.3)}
 dialog[open]{display:flex;flex-direction:column}
@@ -127,7 +128,13 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
       <div class="f"><label class="f" for="cpf"><span>CPF do piloto</span></label><input type="text" id="cpf" inputmode="numeric" placeholder="000.000.000-00" maxlength="14"><label class="semcpf"><input type="checkbox" id="semcpf"> Piloto não possui CPF</label></div>
       <label class="f"><span>RG do piloto (opcional)</span><input type="text" id="rg" maxlength="20"></label>
       <label class="f"><span>Número da moto</span><input type="text" id="num" inputmode="numeric" maxlength="4"></label>
-      <label class="f full"><span>Endereço (rua, número, cidade e UF)</span><input type="text" id="cidade" autocomplete="street-address"></label>
+      <label class="f"><span>CEP</span><input type="text" id="cep" inputmode="numeric" placeholder="00000-000" maxlength="9" autocomplete="postal-code"><small class="cepmsg" id="cepMsg" aria-live="polite"></small></label>
+      <label class="f"><span>Número</span><input type="text" id="endnum" maxlength="10" placeholder="S/N se não houver" autocomplete="off"></label>
+      <label class="f full"><span>Endereço (rua)</span><input type="text" id="rua" autocomplete="address-line1"></label>
+      <label class="f"><span>Complemento (opcional)</span><input type="text" id="compl" maxlength="40"></label>
+      <label class="f"><span>Bairro</span><input type="text" id="bairro" autocomplete="address-level3"></label>
+      <label class="f"><span>Cidade</span><input type="text" id="cidade" autocomplete="address-level2"></label>
+      <label class="f"><span>UF</span><input type="text" id="uf" maxlength="2" autocomplete="address-level1"></label>
       <label class="f"><span>Equipe (se tiver)</span><input type="text" id="equipe"></label>
       <label class="f"><span>Seu WhatsApp</span><input type="tel" id="tel" inputmode="tel" placeholder="(11) 90000-0000" autocomplete="tel"></label>
       <label class="f"><span>Tel. de acompanhante (urgência)</span><input type="tel" id="urg" inputmode="tel" placeholder="(11) 90000-0000"></label>
@@ -245,6 +252,34 @@ CATS.forEach((c,i) => {
     s.appendChild(k); s.appendChild(document.createTextNode(p[1])); d.appendChild(s); });
   l.appendChild(cb); l.appendChild(d); lista.appendChild(l);
 });
+const gv = id => $(id).value.trim();
+function endereco(){
+  const cep = gv('cep');
+  return `${gv('rua')}, ${gv('endnum')}${gv('compl') ? ' (' + gv('compl') + ')' : ''} – ${gv('bairro') ? gv('bairro') + ' – ' : ''}${gv('cidade')}/${gv('uf').toUpperCase()}${cep ? ' – CEP ' + cep : ''}`;
+}
+function cepMsg(t, erro){ const el = $('cepMsg'); el.textContent = t; el.style.color = erro ? '#ff6b6b' : 'var(--muted)'; }
+async function buscaCep(cep){
+  cepMsg('Buscando endereço...');
+  try {
+    const r = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    if (!r.ok) throw new Error('http');
+    const d = await r.json();
+    if ($('cep').value.replace(/\D/g,'') !== cep) return;
+    if (d.erro) { cepMsg('CEP não encontrado. Preencha o endereço manualmente.', true); return; }
+    $('rua').value = d.logradouro || ''; $('bairro').value = d.bairro || '';
+    $('cidade').value = d.localidade || ''; $('uf').value = d.uf || '';
+    cepMsg('Endereço encontrado. Confira e informe o número.');
+    $('endnum').focus();
+  } catch (e) { cepMsg('Não foi possível buscar o CEP agora. Preencha o endereço manualmente.', true); }
+}
+$('cep').addEventListener('input', e => {
+  let v = e.target.value.replace(/\D/g,'').slice(0,8);
+  if (v.length > 5) v = v.slice(0,5) + '-' + v.slice(5);
+  e.target.value = v;
+  if (v.length === 9) buscaCep(v.replace('-','')); else cepMsg('');
+});
+$('uf').addEventListener('input', e => { e.target.value = e.target.value.replace(/[^a-zA-Z]/g,'').toUpperCase(); });
+
 const modal = $('modalCats');
 $('verCats').addEventListener('click', () => {
   const atual = $('cats').value.toLowerCase().split(',').map(s => s.trim());
@@ -281,7 +316,7 @@ $('send').addEventListener('click', () => {
   if (g('tel').replace(/\D/g,'').length < 10) falta.push('um WhatsApp válido');
   if (!semCpf() && !cpfOk(g('cpf'))) falta.push('um CPF do piloto válido (ou marque que não possui)');
   if (!g('cats')) falta.push('a categoria');
-  if (!g('cidade')) falta.push('o endereço');
+  if (!g('rua') || !g('endnum') || !g('cidade') || g('uf').length < 2) falta.push('o endereço completo (CEP, rua, número, cidade e UF)');
   if (menor() || semCpf()){ if(!g('rnome')) falta.push('o nome do responsável'); if(!cpfOk(g('rcpf'))) falta.push('um CPF do responsável válido'); }
   if (falta.length){ $('err').textContent = 'Preencha ' + falta.join(', ') + '.'; return; }
   $('err').textContent = '';
@@ -303,14 +338,14 @@ $('send').addEventListener('click', () => {
     g('num') ? `🔢 Nº da moto: ${g('num')}` : '',
     g('moto') ? `🏍️ Moto: ${g('moto')}` : '',
     `🏆 Categoria(s): ${g('cats')}`,
-    g('cidade') ? `🌎 Endereço: ${g('cidade')}` : '',
+    g('cidade') ? `🌎 Endereço: ${endereco()}` : '',
     g('equipe') ? `👥 Equipe: ${g('equipe')}` : '',
     `📱 WhatsApp: ${g('tel')}`,
     g('obs') ? `📝 Obs.: ${g('obs')}` : ''
   ].filter((l,i,arr) => l !== '' || (arr[i-1] !== '' && i>0));
   const FICHA_URL = 'https://tamura.esp.br/ficha-inscricao.html';
   const resp = menor() || semCpf();
-  const dados = {eq:g('equipe'), nasc:`${d}/${m}/${a}`, ap:g('apelido'), nome:g('nome'), rg:g('rg'), cpf:semCpf()?'NÃO POSSUI':g('cpf'), conv:g('conv'), end:g('cidade'), tel:g('tel'), urg:g('urg'), moto:g('moto'), num:g('num'), cats:g('cats').split(',').map(s=>s.trim()).filter(Boolean), lote:LOTES[lote].nome, insc:it[0], valor:brl(it[1]), rn:resp?g('rnome'):'', rc:resp?g('rcpf'):'', obs:g('obs')};
+  const dados = {eq:g('equipe'), nasc:`${d}/${m}/${a}`, ap:g('apelido'), nome:g('nome'), rg:g('rg'), cpf:semCpf()?'NÃO POSSUI':g('cpf'), conv:g('conv'), end:endereco(), tel:g('tel'), urg:g('urg'), moto:g('moto'), num:g('num'), cats:g('cats').split(',').map(s=>s.trim()).filter(Boolean), lote:LOTES[lote].nome, insc:it[0], valor:brl(it[1]), rn:resp?g('rnome'):'', rc:resp?g('rcpf'):'', obs:g('obs')};
   const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(dados)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
   linhas.push('', '🖨️ Ficha para impressão:', FICHA_URL + '#d=' + b64);
   window.open(`https://wa.me/${WHATS}?text=${encodeURIComponent(linhas.join('\n'))}`, '_blank', 'noopener');

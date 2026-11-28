@@ -20,6 +20,11 @@ h1{margin:0;font-size:26px;text-decoration:underline;letter-spacing:.01em}
 .r{display:flex;gap:18px;margin-bottom:13px}
 .f{display:flex;align-items:flex-end;gap:6px;flex:1;min-width:0}
 .f.w2{flex:2}.f.w3{flex:3}
+.f.nasc,.f.cpfr,.f.tel{flex:0 0 auto}
+.f.tel .v{flex:none;width:140px;white-space:nowrap}
+.f.urg{flex:1}.f.urg .v{min-width:140px;white-space:nowrap}
+.f.nasc .v{flex:none;width:110px;white-space:nowrap;text-align:center}
+.f.cpfr .v{flex:none;width:135px;white-space:nowrap;text-align:center}
 .f label{font-weight:700;font-size:13px;white-space:nowrap}
 .v{flex:1;min-width:0;border-bottom:1px solid #000;min-height:19px;font-weight:700;font-size:14px;padding:0 4px;overflow-wrap:anywhere}
 .box{border:2px solid #000;padding:14px 16px;margin:16px 0 14px}
@@ -44,7 +49,7 @@ h1{margin:0;font-size:26px;text-decoration:underline;letter-spacing:.01em}
 .ass .l{flex:1;text-align:center;border-top:1px solid #000;padding-top:5px;font-size:12px;max-width:340px}
 .erro{max-width:520px;margin:40px auto;background:#fff;padding:24px;border-radius:10px;text-align:center}
 [hidden]{display:none!important}
-@media(max-width:700px){.sheet{padding:14px}.r{flex-wrap:wrap;gap:10px}.f{flex:1 1 100%}.top{flex-wrap:wrap}}
+@media(max-width:700px){.sheet{padding:14px}.r{flex-wrap:wrap;gap:10px}.f,.f.nasc,.f.cpfr,.f.tel{flex:1 1 100%}.f.nasc .v,.f.cpfr .v,.f.tel .v{flex:1;width:auto;text-align:left}.top{flex-wrap:wrap}}
 @media print{body{background:#fff}.bar{display:none}.sheet{margin:0;width:auto;padding:0}}
 </style>
 </head>
@@ -58,8 +63,8 @@ h1{margin:0;font-size:26px;text-decoration:underline;letter-spacing:.01em}
   <p class="evt">12ª Etapa Circuito Paulista de Velocross – Grande Final 2026 – Jacutinga</p>
 
   <div class="r">
-    <div class="f w2"><label>Equipe:</label><div class="v" id="eq"></div></div>
-    <div class="f"><label>Data de Nascimento:</label><div class="v" id="nasc"></div></div>
+    <div class="f"><label>Equipe:</label><div class="v" id="eq"></div></div>
+    <div class="f nasc"><label>Data de Nascimento:</label><div class="v" id="nasc"></div></div>
     <div class="f"><label>Apelido:</label><div class="v" id="ap"></div></div>
   </div>
   <div class="r"><div class="f"><label>Nome completo</label><div class="v" id="nome"></div></div></div>
@@ -70,8 +75,8 @@ h1{margin:0;font-size:26px;text-decoration:underline;letter-spacing:.01em}
   </div>
   <div class="r"><div class="f"><label>Endereço:</label><div class="v" id="end"></div></div></div>
   <div class="r">
-    <div class="f"><label>Tel.:</label><div class="v" id="tel"></div></div>
-    <div class="f w2"><label>Importante Tel. de acompanhantes em caso de urgência</label><div class="v" id="urg"></div></div>
+    <div class="f tel"><label>Tel.:</label><div class="v" id="tel"></div></div>
+    <div class="f urg"><label>Importante Tel. de acompanhantes em caso de urgência</label><div class="v" id="urg"></div></div>
   </div>
 
   <div class="box">
@@ -89,7 +94,7 @@ h1{margin:0;font-size:26px;text-decoration:underline;letter-spacing:.01em}
     </div>
     <div class="r" id="rowResp" hidden>
       <div class="f w2"><label>Responsável:</label><div class="v" id="rn"></div></div>
-      <div class="f"><label>CPF do responsável:</label><div class="v" id="rc"></div></div>
+      <div class="f cpfr"><label>CPF do responsável:</label><div class="v" id="rc"></div></div>
     </div>
     <div class="r" id="rowObs" hidden><div class="f"><label>Obs.:</label><div class="v" id="obs"></div></div></div>
   </div>
